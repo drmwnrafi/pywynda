@@ -1,9 +1,3 @@
-"""
-Implementation of Discovering State-Space Representation of
-Dynamical Systems From Noisy Data by Agus Hasan
-
-PDF Link : https://www.researchgate.net/publication/382909160_Discovering_State-Space_Representation_of_Dynamical_Systems_from_Noisy_Data
-"""
 import numpy as np
 
 class WyNDA:

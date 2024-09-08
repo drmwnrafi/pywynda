@@ -1,12 +1,11 @@
 import sys
 import os
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 import numpy as np
 import matplotlib.pyplot as plt
 from src.wynda import WyNDA
 from src.gen_func import GenerateWideArray
+
 
 def lorentz_sys(sigma:float, rho:float, beta:float, state:np.array):
     x, y, z = state
@@ -17,7 +16,7 @@ def lorentz_sys(sigma:float, rho:float, beta:float, state:np.array):
 
 init_state = np.array([1.0, 1.0, 1.0])
 state = init_state
-t_sim = [0.0, 5.0]
+t_sim = [0.0, 30.0]
 dt = 0.001
 t = np.arange(t_sim[0], t_sim[1], dt)
 
@@ -25,8 +24,8 @@ sigma = 10.0
 rho = 28.0
 beta = 3.0
 
-wynda = WyNDA(3, 30, init_state, 0.995, 0.999)
-widearray = GenerateWideArray(3)
+wynda = WyNDA(n_state=3, n_params=30, init_state=init_state, lambda_state=0.995, lambda_params=0.999)
+widearray = GenerateWideArray(n_state=3)
 
 def basis_function(input:np.array):
     basis = np.array([
@@ -46,13 +45,13 @@ params_history = np.zeros((len(t), 30))
 for i, time in enumerate(t):
     state += lorentz_sys(sigma, rho, beta, state) * dt
     basis = basis_function(state)
-    Phi = widearray.custom(basis)
-    wynda_state, wynda_params = wynda.run(state, Phi, dt)
+    Phi = widearray.custom(basis_function=basis)
+    wynda_state, wynda_params = wynda.run(input=state, wide_array=Phi, dt=dt)
     wynda_history[i, :] = wynda_state
     state_history[i, :] = state
     params_history[i, :] = wynda_params
 
-fig = plt.figure()
+fig = plt.figure(figsize=(10,8))
 ax = fig.add_subplot(111, projection="3d")
 ax.plot(state_history[:, 0], state_history[:, 1], state_history[:, 2], lw=2, color='r', linestyle='-')
 ax.plot(wynda_history[:, 0], wynda_history[:, 1], wynda_history[:, 2], lw=2, color='b', linestyle='--')
