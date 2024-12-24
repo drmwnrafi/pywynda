@@ -16,7 +16,7 @@ def lorentz_sys(sigma:float, rho:float, beta:float, state:np.array):
 
 init_state = np.array([1.0, 1.0, 1.0])
 state = init_state
-t_sim = [0.0, 30.0]
+t_sim = [0.0, 10.0]
 dt = 0.001
 t = np.arange(t_sim[0], t_sim[1], dt)
 
